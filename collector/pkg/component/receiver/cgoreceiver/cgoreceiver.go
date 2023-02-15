@@ -59,6 +59,7 @@ func NewCgoReceiver(config interface{}, telemetry *component.TelemetryTools, ana
 	return cgoReceiver
 }
 
+// s
 func (r *CgoReceiver) Start() error {
 	r.telemetry.Logger.Info("Start CgoReceiver")
 	res := int(C.runForGo())

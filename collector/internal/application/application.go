@@ -88,6 +88,7 @@ func (a *Application) registerFactory() {
 	a.componentsFactory.RegisterExporter(cameraexporter.Type, cameraexporter.New, cameraexporter.NewDefaultConfig())
 }
 
+// 读取配置
 func (a *Application) readInConfig(path string) error {
 	a.viper.SetConfigFile(path)
 	err := a.viper.ReadInConfig()
@@ -105,6 +106,7 @@ func (a *Application) readInConfig(path string) error {
 
 // buildPipeline builds a event processing pipeline based on hard-code.
 func (a *Application) buildPipeline() error {
+	// 初始化exporter、processor、analyzer等等
 	// TODO: Build pipeline via configuration to implement dependency injection
 	// Initialize exporters
 	otelExporterFactory := a.componentsFactory.Exporters[otelexporter.Otel]
@@ -119,12 +121,12 @@ func (a *Application) buildPipeline() error {
 	k8sProcessorFactory := a.componentsFactory.Processors[k8sprocessor.K8sMetadata]
 	k8sMetadataProcessor := k8sProcessorFactory.NewFunc(k8sProcessorFactory.Config, a.telemetry.GetTelemetryTools(k8sprocessor.K8sMetadata), aggregateProcessor)
 	// Initialize all analyzers
-	// 1. Common network request analyzer
+	// 1. Common network request analyzer  网络请求分析
 	networkAnalyzerFactory := a.componentsFactory.Analyzers[network.Network.String()]
 	// Now NetworkAnalyzer must be initialized before any other analyzers, because it will
 	// use its configuration to initialize the conntracker module which is also used by others.
 	networkAnalyzer := networkAnalyzerFactory.NewFunc(networkAnalyzerFactory.Config, a.telemetry.GetTelemetryTools(network.Network.String()), []consumer.Consumer{k8sMetadataProcessor})
-	// 2. Layer 4 TCP events analyzer
+	// 2. Layer 4 TCP events analyzer 4层tcp解析
 	aggregateProcessorForTcp := aggregateProcessorFactory.NewFunc(aggregateProcessorFactory.Config, a.telemetry.GetTelemetryTools(aggregateprocessor.Type), otelExporter)
 	k8sMetadataProcessor2 := k8sProcessorFactory.NewFunc(k8sProcessorFactory.Config, a.telemetry.GetTelemetryTools(aggregateprocessor.Type), aggregateProcessorForTcp)
 	tcpAnalyzerFactory := a.componentsFactory.Analyzers[tcpmetricanalyzer.TcpMetric.String()]

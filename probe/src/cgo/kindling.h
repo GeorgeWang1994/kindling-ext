@@ -13,7 +13,6 @@
 #include <chrono>
 #include <cstdlib>
 #include <iomanip>
-#include "KindlingInterface.h"
 #include "sinsp.h"
 
 int init_probe();
