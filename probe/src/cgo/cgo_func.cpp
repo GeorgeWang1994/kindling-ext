@@ -4,7 +4,6 @@
 
 #include "cgo_func.h"
 #include "kindling.h"
-#include "catch_sig.h"
 
 int runForGo() { return init_probe(); }
 

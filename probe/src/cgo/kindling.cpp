@@ -12,7 +12,6 @@
 
 #include "converter/cpu_converter.h"
 
-cpu_converter* cpuConverter;
 fstream debug_file_log;
 map<uint64_t, char*> ptid_comm;
 static sinsp* inspector = nullptr;
@@ -145,7 +144,6 @@ int init_probe() {
     inspector->open("");
     set_eventmask(inspector);
 
-    cpuConverter = new cpu_converter(inspector);
   } catch (const exception& e) {
     fprintf(stderr, "kindling probe init err: %s", e.what());
     return 1;
