@@ -9,8 +9,7 @@ include_directories("../converter")
 set(SOURCE_FILES
 		cgo/cgo_func.cpp
 		cgo/kindling.cpp
-		converter/cpu_converter.cpp
-        cgo/catch_sig.cpp cgo/catch_sig.h)
+		converter/cpu_converter.cpp)
 
 add_library(kindling SHARED ${SOURCE_FILES})
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
